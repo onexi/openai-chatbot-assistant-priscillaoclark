@@ -1,12 +1,9 @@
-// Load environment variables
 import dotenv from 'dotenv';
 dotenv.config();
 import OpenAI from 'openai';
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-// If using Node.js < 18, uncomment the next line
-// const fetch = require('node-fetch');
 
 const app = express();
 const PORT = 3000;
@@ -14,100 +11,116 @@ const PORT = 3000;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('public')); // Serve static files from the 'public' directory
+app.use(express.static('public'));
 
-// State dictionary
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 let state = {
   assistant_id: null,
-  assistant_name: null,
-  threadId: null,
-  messages: [],
+  thread_id: null,
+  run_id: null,
+  user_message: null,
 };
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-// Route to get the list of Assistants
-app.post('/api/assistants', async (req, res) => {
-  let assistant_id = req.body.name;
-    try {
-        let myAssistant = await openai.beta.assistants.retrieve(
-          assistant_id
-        );
-        console.log(myAssistant);
-              // Extract the list of assistants from 'data.data'
-        state.assistant_id = myAssistant.id; // Updated line
-        state.assistant_name = myAssistant.name; // Updated line
-        res.status(200).json(state);
-      }
-      catch{
-        if (!myAssistant.ok) {
-          const errorText = await myAssistant.text;
-          console.error('Error fetching assistants:', errorText);
-          return res.status(myAssistant.status).json({ error: 'Failed to fetch assistants' });
-        }
-      }
-  });
-  
+
+// Route to get all Assistants
+app.get('/api/assistants', async (req, res) => {
+  try {
+    const response = await openai.beta.assistants.list({
+      order: "desc",
+      limit: 20,
+    });
+    const assistants = response.data.map(assistant => ({
+      id: assistant.id,
+      name: assistant.name
+    }));
+    res.status(200).json(assistants);
+  } catch (error) {
+    console.error('Error fetching assistants:', error);
+    res.status(500).json({ error: 'Failed to fetch assistants', details: error.message });
+  }
+});
+
+// Route to get a specific Assistant
+app.get('/api/assistants/:assistant_id', async (req, res) => {
+  try {
+    const assistant = await openai.beta.assistants.retrieve(req.params.assistant_id);
+    res.status(200).json(assistant);
+  } catch (error) {
+    console.error('Error fetching assistant:', error);
+    res.status(500).json({ error: 'Failed to fetch assistant', details: error.message });
+  }
+});
 
 // Route to create a new Thread
 app.post('/api/threads', async (req, res) => {
-  const { assistantId } = req.body;
   try {
-    let response = await openai.beta.threads.create()
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error creating thread:', errorText);
-      return res.status(response.status).json({ error: 'Failed to create thread' });
-    }
-
-    const data = await response.json();
-    state.threadId = data.id;
-    state.messages = []; // Reset messages
-    res.json({ threadId: state.threadId });
+    const thread = await openai.beta.threads.create();
+    state.thread_id = thread.id;
+    res.json({ thread_id: thread.id });
   } catch (error) {
     console.error('Error creating thread:', error);
-    res.status(500).json({ error: 'Failed to create thread' });
+    res.status(500).json({ error: 'Failed to create thread', details: error.message });
   }
 });
 
-// Route to send a message and run the Assistant
+// Route to run the agent
 app.post('/api/run', async (req, res) => {
-  const { message } = req.body;
-  state.messages.push({ role: 'user', content: message });
   try {
-    await openai.beta.threads.messages.create(thread_id,
-        {
-            role: "user",
-            content: message,
-        })
-    // run and poll thread V2 API feature
-    let run = await openai.beta.threads.runs.createAndPoll(thread_id, {
-        assistant_id: state.assistant_id
-    })
-    let run_id = run.id;
-    state.run_id = run_id;
+    state.user_message = req.body.message;
+    state.assistant_id = req.body.assistant_id;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error running assistant:', errorText);
-      return res.status(response.status).json({ error: 'Failed to run assistant' });
+    if (!state.thread_id) {
+      throw new Error('No active thread. Please create a thread first.');
     }
-    let messages = await openai.beta.threads.messages.list(thread_id);
-    let all_messages = [];
-    let role = "";
-    let content = "";
-   
-    if (assistantMessage) {
-      state.messages.push(assistantMessage);
+
+    // Add the user's message to the thread
+    await openai.beta.threads.messages.create(state.thread_id, {
+      role: "user",
+      content: state.user_message,
+    });
+
+    // Run the assistant
+    const run = await openai.beta.threads.runs.create(state.thread_id, {
+      assistant_id: state.assistant_id
+    });
+
+    state.run_id = run.id;
+
+    // Poll for completion
+    let runStatus;
+    do {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      runStatus = await openai.beta.threads.runs.retrieve(state.thread_id, state.run_id);
+    } while (runStatus.status !== 'completed' && runStatus.status !== 'failed');
+
+    if (runStatus.status === 'failed') {
+      throw new Error('Run failed: ' + runStatus.last_error?.message || 'Unknown error');
     }
-    res.json({ messages: state.messages });
+
+    // Retrieve messages, focusing on the last assistant message
+    const messages = await openai.beta.threads.messages.list(state.thread_id);
+    const lastAssistantMessage = messages.data
+      .filter(msg => msg.role === 'assistant')
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+
+    if (!lastAssistantMessage) {
+      throw new Error('No assistant message found');
+    }
+
+    res.json({ 
+      message: {
+        role: lastAssistantMessage.role,
+        content: lastAssistantMessage.content[0].text.value
+      }
+    });
   } catch (error) {
-    console.error('Error running assistant:', error);
-    res.status(500).json({ error: 'Failed to run assistant' });
+    console.error('Error running agent:', error);
+    res.status(500).json({ error: 'Failed to run agent', details: error.message });
   }
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

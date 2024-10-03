@@ -1,0 +1,98 @@
+{
+  "products": [
+    {
+      "id": "CHK001",
+      "name": "Basic Checking Account",
+      "type": "Checking",
+      "description": "A simple, no-frills checking account for everyday banking needs.",
+      "minimumBalance": 0,
+      "monthlyFee": 0,
+      "interestRate": 0
+    },
+    {
+      "id": "CHK002",
+      "name": "Premium Checking Account",
+      "type": "Checking",
+      "description": "A feature-rich checking account with added benefits for high-balance customers.",
+      "minimumBalance": 5000,
+      "monthlyFee": 15,
+      "interestRate": 0.01
+    },
+    {
+      "id": "SAV001",
+      "name": "Standard Savings Account",
+      "type": "Savings",
+      "description": "A basic savings account to help customers build their nest egg.",
+      "minimumBalance": 100,
+      "monthlyFee": 0,
+      "interestRate": 0.05
+    },
+    {
+      "id": "SAV002",
+      "name": "High-Yield Savings Account",
+      "type": "Savings",
+      "description": "A savings account offering competitive interest rates for larger balances.",
+      "minimumBalance": 10000,
+      "monthlyFee": 0,
+      "interestRate": 0.1
+    },
+    {
+      "id": "CD001",
+      "name": "12-Month Certificate of Deposit",
+      "type": "CD",
+      "description": "A 12-month term deposit with a guaranteed return.",
+      "minimumDeposit": 1000,
+      "term": 12,
+      "interestRate": 0.75
+    },
+    {
+      "id": "LOAN001",
+      "name": "Personal Loan",
+      "type": "Loan",
+      "description": "An unsecured personal loan for various purposes.",
+      "minimumAmount": 5000,
+      "maximumAmount": 50000,
+      "interestRate": 8.99,
+      "term": {
+        "min": 12,
+        "max": 60
+      }
+    },
+    {
+      "id": "MORT001",
+      "name": "30-Year Fixed Rate Mortgage",
+      "type": "Mortgage",
+      "description": "A traditional 30-year fixed-rate home loan.",
+      "minimumDownPayment": 0.03,
+      "interestRate": 3.25,
+      "term": 360
+    },
+    {
+      "id": "CC001",
+      "name": "Rewards Credit Card",
+      "type": "Credit Card",
+      "description": "A credit card offering cashback on purchases.",
+      "annualFee": 0,
+      "APR": 15.99,
+      "rewardsRate": 0.015
+    },
+    {
+      "id": "BIZ001",
+      "name": "Small Business Checking Account",
+      "type": "Business",
+      "description": "A checking account designed for small business needs.",
+      "minimumBalance": 1000,
+      "monthlyFee": 15,
+      "transactionLimit": 250
+    },
+    {
+      "id": "INV001",
+      "name": "Investment Management Service",
+      "type": "Wealth Management",
+      "description": "Professional investment management for high-net-worth individuals.",
+      "minimumInvestment": 250000,
+      "annualFee": 0.01,
+      "services": ["Portfolio Management", "Financial Planning", "Tax Optimization"]
+    }
+  ]
+}

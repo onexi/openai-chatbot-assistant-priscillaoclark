@@ -1,0 +1,20 @@
+Organic Bananas ID: PRD001 Category: Produce Price: $0.99 per lb In Stock: Yes Description: Fresh, organic bananas
+Almond Milk ID: PRD002 Category: Plant-Based Dairy Price: $3.49 per 64 fl oz In Stock: Yes Description: Unsweetened almond milk
+Whole Grain Bread ID: PRD003 Category: Bakery Price: $3.99 per loaf In Stock: Yes Description: Freshly baked whole grain bread
+Beyond Burger Patties ID: PRD004 Category: Plant-Based Protein Price: $5.99 per 8 oz pack In Stock: Yes Description: Plant-based burger patties
+Tofu ID: PRD005 Category: Plant-Based Protein Price: $2.49 per 14 oz pack In Stock: Yes Description: Firm tofu
+Tomatoes ID: PRD006 Category: Produce Price: $1.99 per lb In Stock: Yes Description: Ripe, red tomatoes
+Tempeh ID: PRD007 Category: Plant-Based Protein Price: $3.99 per 8 oz pack In Stock: Yes Description: Organic soy tempeh
+Whole Wheat Pasta ID: PRD008 Category: Dry Goods Price: $1.99 per 16 oz box In Stock: Yes Description: Whole wheat penne pasta
+Vegan Cheddar Cheese ID: PRD009 Category: Plant-Based Dairy Price: $4.99 per 8 oz pack In Stock: Yes Description: Plant-based cheddar cheese alternative
+Apple Juice ID: PRD010 Category: Beverages Price: $2.49 per 64 fl oz In Stock: Yes Description: 100% pure apple juice
+Veggie Chips ID: PRD011 Category: Snacks Price: $3.29 per 6 oz bag In Stock: Yes Description: Mixed vegetable chips
+Granola ID: PRD012 Category: Breakfast Price: $4.49 per 16 oz bag In Stock: Yes Description: Vegan granola with nuts and dried fruit
+Recycled Toilet Paper ID: PRD013 Category: Household Price: $7.99 per 12 rolls In Stock: Yes Description: 100% recycled paper, 2-ply toilet paper
+Plant-Based Laundry Detergent ID: PRD014 Category: Household Price: $11.99 per 100 fl oz In Stock: Yes Description: Eco-friendly, plant-based laundry detergent
+Vegan Tomato Soup ID: PRD015 Category: Canned Goods Price: $2.29 per 14 oz can In Stock: Yes Description: Creamy tomato soup (dairy-free)
+Vegan Frozen Pizza ID: PRD016 Category: Frozen Foods Price: $6.99 per 12 inch In Stock: Yes Description: Plant-based cheese and vegetable pizza
+Coconut Water ID: PRD017 Category: Beverages Price: $3.99 per 1 L In Stock: Yes Description: 100% pure coconut water
+Soy Yogurt ID: PRD018 Category: Plant-Based Dairy Price: $1.79 per 6 oz cup In Stock: Yes Description: Plain, unsweetened soy yogurt
+Baby Carrots ID: PRD019 Category: Produce Price: $1.99 per 1 lb bag In Stock: Yes Description: Peeled baby carrots
+Fair Trade Coffee ID: PRD020 Category: Beverages Price: $8.99 per 12 oz bag In Stock: Yes Description: Fair trade, organic ground coffee
